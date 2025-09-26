@@ -18,6 +18,7 @@
         </div>
 
         <a href="#IntroSection">Home</a>
+        <a href="#AboutSection">About Me</a>
         <a href="#PortfolioSection">Portfolio</a>
         <a href="#ContactSection">Contact Me</a>
     </nav>
@@ -33,45 +34,70 @@
                 <a class="btn phrase" href="#PortfolioSection">Portfolio</a>
             </div>
 
-            <img src="profile-icon.png" alt="Profile Picture" id="profilePic" onerror="this.src='placeholder.png';">
+            <img src="images/placeholders/profile-icon.png" alt="Profile Picture" id="profilePic" onerror="this.src='images/placeholders/placeholder.png';">
         </section>
     </header>
     <main>
+        <!-- About Me Section -->
+        <section id="AboutSection">
+            <h2 class="underline">About Me</h2>
+            <p>A few things about me</p>
+
+            <article>
+                <h3>Background</h3>
+                <p>I am a self-taught web developer with a passion for creating dynamic and responsive web applications. I have experience in both frontend and backend development, and I enjoy working on projects that challenge me to learn new skills.</p>
+
+                <h3>Skills</h3>
+                <div id="AboutGrid">
+                    <img src="images/logos/html5-logo.png" alt="HTML5" title="HTML5" onerror="this.src='images/placeholders/placeholder.png';">
+                    <img src="images/logos/css-logo.svg" alt="CSS" title="CSS" onerror="this.src='images/placeholders/placeholder.png';">
+                    <img src="images/logos/javascript-logo.png" alt="JavaScript" title="JavaScript" onerror="this.src='images/placeholders/placeholder.png';">
+                    <img src="images/logos/python-logo.png" alt="Python" title="Python" onerror="this.src='images/placeholders/placeholder.png';">
+                    <img src="images/logos/php-logo.png" alt="PHP" title="PHP" onerror="this.src='images/placeholders/placeholder.png';">
+                    <img src="images/logos/vllm-logo.png" alt="vLLM" title="vLLM" onerror="this.src='images/placeholders/placeholder.png';">
+                    <img src="images/logos/git-logo.png" alt="Git" title="Git" onerror="this.src='images/placeholders/placeholder.png';">
+                </div>
+
+                <h3>Interests</h3>
+                <p>In my free time, I enjoy hiking, photography, and exploring new technologies. I am always looking for opportunities to collaborate on exciting projects and contribute to the tech community.</p>
+            </article>
+        </section>
+        <!-- Portfolio Section --> 
         <section id="PortfolioSection">
             <h2 class="underline">Portfolio</h2>
             <p>Welcome to my portfolio section. Here you will find my school projects</p>
 
-            <div id="portfolioGrid">
+            <div id="PortfolioGrid">
                 <article class="project">
-                    <img src="project1.jpg" alt="Project 1" onerror="this.src='placeholder.png';">
+                    <img src="images/logos/project1.jpg" alt="Project 1" onerror="this.src='images/placeholders/placeholder.png';">
 
                     <h3>Project Title 1</h3>
                     <p>Description of Project 1.</p>
                 </article>
 
                 <article class="project">
-                    <img src="project1.jpg" alt="Project 2" onerror="this.src='placeholder.png';">
+                    <img src="images/logos/project2.jpg" alt="Project 2" onerror="this.src='images/placeholders/placeholder.png';">
 
                     <h3>Project Title 2</h3>
                     <p>Description of Project 2.</p>
                 </article>
 
                 <article class="project">
-                    <img src="project1.jpg" alt="Project 3" onerror="this.src='placeholder.png';">
+                    <img src="images/logos/project3.jpg" alt="Project 3" onerror="this.src='images/placeholders/placeholder.png';">
 
                     <h3>Project Title 3</h3>
                     <p>Description of Project 3.</p>
                 </article>
 
                 <article class="project">
-                    <img src="project1.jpg" alt="Project 4" onerror="this.src='placeholder.png';">
+                    <img src="images/logos/project4.jpg" alt="Project 4" onerror="this.src='images/placeholders/placeholder.png';">
 
                     <h3>Project Title 4</h3>
                     <p>Description of Project 3.</p>
                 </article>
 
                 <article class="project">
-                    <img src="project1.jpg" alt="Project 5" onerror="this.src='placeholder.png';">
+                    <img src="images/logos/project5.jpg" alt="Project 5" onerror="this.src='images/placeholders/placeholder.png';">
 
                     <h3>Project Title 5</h3>
                     <p>Description of Project 3.</p>
