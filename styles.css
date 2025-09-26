@@ -61,6 +61,24 @@ textarea {
     background-color: #357ABD;
 }
 
+.btn-inverse {
+    width: fit-content;
+    background-color: white;
+    border: none;
+    color: #4c84af;
+    padding: 1rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1rem;
+    margin: .25rem .12rem;
+    border-radius: .25rem;
+    cursor: pointer;
+}
+.btn-inverse:hover {
+    background-color: #e9f5ff;
+}
+
 footer {
     background-color: #f2f2f2;
     text-align: center;
