@@ -128,7 +128,7 @@ section:not(#main) {
     /* Solid when scrolled */
     :scope.solid {
         background-color: #333;
-        backdrop-filter: blur(6px); /* Nice glass effect, just found out about this */
+        backdrop-filter: blur(.4rem); /* Nice glass effect, just found out about this */
     }
     #logo {
         border: .5rem solid #ccc;
@@ -198,6 +198,49 @@ section:not(#main) {
     }
 }
 
+@scope (#AboutSection) {
+    :scope {
+        text-align: center;
+        width: 100%;
+        background-color: #f2f2f2;
+        min-height: 50vh;
+        padding: 1.5rem 0;
+    }
+    h2 {
+        font-size: 3rem;
+        font-weight: 600;
+    }
+    p {
+        max-width: 800px;
+        margin: auto;
+        font-size: 1.2rem;
+        line-height: 1.6;
+    }
+
+    @scope (#AboutGrid) {
+        :scope {
+            display: grid;
+            align-items: center;
+            grid-template-columns: repeat(auto-fit, minmax(3rem, 1fr) minmax(4rem, 1fr));
+            gap: 3rem;
+            padding: 3rem;
+        }
+        h2, h3, p {
+            text-align: left;
+            padding: 0;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s;
+        }
+        img:hover {
+            cursor: pointer;
+            transform: translateY(-5px);
+        }
+    }
+}
+
 @scope (#PortfolioSection) {
     :scope {
         text-align: center;
@@ -210,7 +253,7 @@ section:not(#main) {
         font-weight: 600;
     }
 
-    @scope (#portfolioGrid) {
+    @scope (#PortfolioGrid) {
         :scope {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
