@@ -11,7 +11,7 @@
 /** General Styles */
 
 :root {
-    --nav-height: 5.5rem;
+    --nav-height: 4rem;
 }
 
 html {
@@ -356,9 +356,17 @@ section:not(#main) {
         min-height: 30vh;
         text-align: center;
         padding: 1.5rem 0;
+        padding-top: calc(var(--nav-height) + 1.5rem);
     }
     img {
         width: 100%;
         height: auto;
+    }
+    .project {
+        display: flex;
+    }
+    .airtable-embed {
+        padding: 1rem;
+        border-radius: .5rem;
     }
 }
