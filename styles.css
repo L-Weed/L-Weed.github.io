@@ -356,7 +356,12 @@ section:not(#main) {
         min-height: 30vh;
         text-align: center;
         padding: 1.5rem 0;
-        padding-top: calc(var(--nav-height) + 1.5rem);
+        padding-top: calc(var(--nav-height));
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        box-sizing: border-box;
+        flex-wrap: wrap;
     }
     img {
         width: 100%;
