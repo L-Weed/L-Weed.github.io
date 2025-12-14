@@ -367,9 +367,14 @@ section:not(#main) {
         width: 100%;
         height: auto;
     }
-    .project {
+    .project.flex {
         display: flex;
         flex: 1;
+    }
+    .project.grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(33.333%, 1fr));
+        gap: 1rem;
     }
     .airtable-embed {
         padding: 1rem;
