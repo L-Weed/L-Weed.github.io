@@ -382,6 +382,7 @@ section:not(#main) {
     .iframe-wrapper {
         border-radius: .25rem;
         overflow: hidden;
+        width: 100%;
     }
     .flex .iframe-wrapper {
         margin: 1.5rem; /* spacing for large iframes */
