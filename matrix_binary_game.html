@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Binary Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #rain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .rain-column {
+            position: absolute;
+            top: 0;
+            font-size: 20px;
+            color: #0f0;
+            white-space: pre;
+            line-height: 1.2;
+            pointer-events: none;
+        }
+        
+        .rain-column span {
+            display: block;
+            transition: text-shadow 0.1s;
+        }
+        
+        .rain-column span:last-child {
+            text-shadow: 0 0 20px #0f0, 0 0 35px #0f0, 0 0 50px #0f0, 0 0 65px #0f0, 0 0 80px #0f0;
+            color: #fff;
+            filter: brightness(1.8);
+        }
+        
+        .rain-column span:nth-last-child(2) {
+            text-shadow: 0 0 15px #0f0, 0 0 25px #0f0, 0 0 40px #0f0;
+        }
+        
+        .rain-column span:nth-last-child(3) {
+            text-shadow: 0 0 12px #0f0, 0 0 20px #0f0, 0 0 30px #0f0;
+        }
+        
+        .rain-column span:nth-last-child(4) {
+            text-shadow: 0 0 10px #0f0, 0 0 15px #0f0;
+        }
+
+        #game-container {
+            position: relative;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid #0f0;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px #0f0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-shadow: 0 0 10px #0f0;
+            letter-spacing: 3px;
+        }
+
+        #score {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        #timer {
+            font-size: 18px;
+            color: #0f0;
+        }
+
+        #timer.warning {
+            color: #ff0;
+            animation: pulse 0.5s infinite;
+        }
+
+        #timer.critical {
+            color: #f00;
+            animation: pulse 0.3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        #game-over {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 3px solid #f00;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 0 50px #f00;
+        }
+
+        #game-over h2 {
+            font-size: 36px;
+            color: #f00;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px #f00;
+        }
+
+        .restart-btn {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: #000;
+            border: 2px solid #0f0;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .restart-btn:hover {
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 20px #0f0;
+        }
+
+        #level-complete {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 3px solid #0f0;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 0 50px #0f0;
+        }
+
+        #level-complete h2 {
+            font-size: 36px;
+            color: #0f0;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px #0f0;
+            animation: flash 0.5s infinite;
+        }
+
+        .grid-container {
+            display: inline-block;
+        }
+
+        .header-row {
+            display: flex;
+            margin-bottom: 10px;
+            padding-left: 0px;
+        }
+
+        .column-header {
+            width: 50px;
+            text-align: center;
+            font-size: 14px;
+            color: #0f0;
+            text-shadow: 0 0 5px #0f0;
+        }
+
+        .game-row {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: center;
+            position: relative;
+            height: 50px;
+        }
+
+        .falling-number {
+            position: absolute;
+            font-size: 20px;
+            color: #0f0;
+            text-shadow: 0 0 8px #0f0;
+            opacity: 0.3;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(0, 255, 0, 0.05);
+            text-shadow: 0 0 5px #0f0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .cell.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .cell:hover {
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 10px #0f0;
+        }
+
+        .target-display {
+            margin-left: 15px;
+            font-size: 18px;
+            min-width: 150px;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+        }
+
+        .target-display.visible {
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+
+        .input-row .target-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .decimal-input {
+            width: 60px;
+            padding: 5px;
+            background: #000;
+            border: 1px solid #0f0;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .check-btn {
+            padding: 5px 15px;
+            background: #000;
+            border: 1px solid #0f0;
+            color: #0f0;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+
+        .check-btn:hover {
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 10px #0f0;
+        }
+
+        .cleared {
+            animation: clearRow 1s forwards;
+        }
+
+        @keyframes clearRow {
+            0% {
+                opacity: 1;
+                filter: brightness(1);
+            }
+            10% {
+                background: rgba(255, 255, 255, 0.9);
+                box-shadow: 0 0 40px #fff, inset 0 0 20px #fff;
+                filter: brightness(3);
+                color: #000;
+            }
+            20% {
+                background: rgba(0, 255, 0, 0.9);
+                box-shadow: 0 0 50px #0f0;
+                filter: brightness(2);
+            }
+            40% {
+                background: rgba(0, 255, 0, 0.5);
+                box-shadow: 0 0 30px #0f0;
+                filter: brightness(1.5);
+            }
+            60% {
+                opacity: 0.8;
+                filter: brightness(1);
+            }
+            80% {
+                opacity: 0.3;
+                filter: brightness(0.5);
+                transform: scaleY(0.5);
+            }
+            100% {
+                opacity: 0;
+                filter: brightness(0);
+                transform: scaleY(0.1);
+            }
+        }
+
+        .correct-flash {
+            animation: flash 0.3s;
+        }
+
+        @keyframes flash {
+            0%, 100% {
+                background: rgba(0, 255, 0, 0.05);
+            }
+            50% {
+                background: rgba(0, 255, 0, 0.5);
+                box-shadow: 0 0 20px #0f0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="rain-container"></div>
+    
+    <div id="game-container">
+        <h1>MATRIX BINARY</h1>
+        <div id="score">
+            <div>LEVEL: <span id="level-value">1</span></div>
+            <div>CLEARED: <span id="score-value">0</span>/<span id="total-rows">6</span></div>
+            <div id="timer">TIME: <span id="time-value">60</span>s</div>
+        </div>
+        
+        <div class="grid-container">
+            <div class="header-row" id="header-row"></div>
+            <div id="grid"></div>
+        </div>
+    </div>
+
+    <div id="level-complete">
+        <h2>LEVEL COMPLETE</h2>
+        <p>Loading next level...</p>
+    </div>
+
+    <div id="game-over">
+        <h2>GAME OVER</h2>
+        <p>Time's up! You reached level <span id="final-level">1</span></p>
+        <button class="restart-btn" onclick="restartGame()">NEW GAME</button>
+    </div>
+
+    <script>
+        const COLS = 8;
+        let level = 1;
+        let score = 0;
+        let gameState = [];
+        let timeLeft = 60;
+        let timerInterval = null;
+        let gameActive = false;
+        let totalRowsForLevel = 3;
+
+        // Create digital rain effect
+        function createRain() {
+            const container = document.getElementById('rain-container');
+            const columnWidth = 20;
+            const numColumns = Math.ceil(window.innerWidth / columnWidth) + 15;
+            
+            for (let i = 0; i < numColumns; i++) {
+                createRainColumn(container, i, columnWidth);
+            }
+            
+            // Handle window resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    container.innerHTML = '';
+                    createRain();
+                }, 250);
+            });
+        }
+        
+        function createRainColumn(container, index, columnWidth) {
+            const column = document.createElement('div');
+            column.className = 'rain-column';
+            column.style.left = `${index * columnWidth}px`;
+            
+            // Random brightness for this column
+            const brightness = 0.4 + Math.random() * 0.6;
+            
+            const trailLength = 15 + Math.floor(Math.random() * 20);
+            let chars = [];
+            
+            for (let j = 0; j < trailLength; j++) {
+                const span = document.createElement('span');
+                span.textContent = Math.random() > 0.5 ? '1' : '0';
+                
+                // Fade effect: dimmer at the top, with glow
+                const fade = (j / trailLength) * brightness;
+                span.style.opacity = fade;
+                
+                // Add glow that intensifies toward bottom
+                const glowIntensity = (j / trailLength) * 10 * brightness;
+                span.style.textShadow = `0 0 ${glowIntensity}px #0f0`;
+                
+                chars.push(span);
+                column.appendChild(span);
+            }
+            
+            container.appendChild(column);
+            
+            // Animation
+            let yPos = -trailLength * 24;
+            const speed = 50 + Math.random() * 40; // Faster: 50-90 pixels per second
+            const delay = Math.random() * 3000;
+            
+            setTimeout(() => {
+                animate();
+            }, delay);
+            
+            function animate() {
+                yPos += speed / 60;
+                column.style.transform = `translateY(${yPos}px)`;
+                
+                // Change characters randomly
+                if (Math.random() > 0.95) {
+                    const randomIndex = Math.floor(Math.random() * chars.length);
+                    chars[randomIndex].textContent = Math.random() > 0.5 ? '1' : '0';
+                }
+                
+                // Reset when off screen
+                if (yPos > window.innerHeight) {
+                    yPos = -trailLength * 24;
+                    
+                    // Regenerate trail with new brightness
+                    const newBrightness = 0.4 + Math.random() * 0.6;
+                    chars.forEach((span, j) => {
+                        span.textContent = Math.random() > 0.5 ? '1' : '0';
+                        const fade = (j / trailLength) * newBrightness;
+                        span.style.opacity = fade;
+                        const glowIntensity = (j / trailLength) * 10 * newBrightness;
+                        span.style.textShadow = `0 0 ${glowIntensity}px #0f0`;
+                    });
+                }
+                
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // Initialize game
+        function initGame() {
+            createRain();
+            createHeaders();
+            startLevel();
+        }
+
+        function startLevel() {
+            score = 0;
+            timeLeft = 60;
+            gameActive = true;
+            gameState = [];
+            
+            // Calculate rows needed: start at 3, increase by 2 each level
+            totalRowsForLevel = 3 + ((level - 1) * 2);
+            
+            document.getElementById('level-value').textContent = level;
+            document.getElementById('score-value').textContent = score;
+            document.getElementById('total-rows').textContent = totalRowsForLevel;
+            document.getElementById('time-value').textContent = timeLeft;
+            document.getElementById('timer').className = '';
+            
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            
+            createGrid();
+            startTimer();
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('time-value').textContent = timeLeft;
+                
+                const timerEl = document.getElementById('timer');
+                if (timeLeft <= 10) {
+                    timerEl.className = 'critical';
+                } else if (timeLeft <= 20) {
+                    timerEl.className = 'warning';
+                }
+                
+                if (timeLeft <= 0) {
+                    gameOver();
+                }
+            }, 1000);
+        }
+
+        function restartGame() {
+            level = 1;
+            totalRowsForLevel = 3;
+            document.getElementById('game-over').style.display = 'none';
+            startLevel();
+        }
+
+        function gameOver() {
+            gameActive = false;
+            clearInterval(timerInterval);
+            
+            document.getElementById('final-level').textContent = level;
+            document.getElementById('game-over').style.display = 'block';
+        }
+
+        function levelComplete() {
+            gameActive = false;
+            clearInterval(timerInterval);
+            
+            document.getElementById('level-complete').style.display = 'block';
+            
+            setTimeout(() => {
+                document.getElementById('level-complete').style.display = 'none';
+                level++;
+                startLevel();
+            }, 2000);
+        }
+
+        function createHeaders() {
+            const headerRow = document.getElementById('header-row');
+            for (let i = COLS - 1; i >= 0; i--) {
+                const header = document.createElement('div');
+                header.className = 'column-header';
+                header.textContent = Math.pow(2, i);
+                headerRow.appendChild(header);
+            }
+        }
+
+        function createGrid() {
+            const grid = document.getElementById('grid');
+            gameState = [];
+            
+            // Always create 6 rows on screen
+            for (let row = 0; row < 6; row++) {
+                createRow(row);
+            }
+        }
+
+        function animateFallingNumbers(rowDiv, rowData, row) {
+            const fallingNumbers = [];
+            
+            // Create falling numbers for each column with different speeds
+            for (let col = 0; col < COLS; col++) {
+                const fallingDiv = document.createElement('div');
+                fallingDiv.className = 'falling-number';
+                fallingDiv.style.left = `${col * 50 + 25}px`;
+                fallingDiv.style.top = '-600px';
+                rowDiv.appendChild(fallingDiv);
+                
+                const duration = 800 + Math.random() * 600; // Random duration between 800-1400ms
+                const startTime = Date.now();
+                
+                fallingNumbers.push({
+                    element: fallingDiv,
+                    duration: duration,
+                    startTime: startTime,
+                    col: col,
+                    targetValue: rowData.cells[col]
+                });
+                
+                // Animate the falling
+                const animate = () => {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    // Update position
+                    const yPos = -600 + (625 * progress);
+                    fallingDiv.style.top = `${yPos}px`;
+                    
+                    // Change number randomly while falling
+                    if (progress < 1) {
+                        fallingDiv.textContent = Math.random() > 0.5 ? '1' : '0';
+                        fallingDiv.style.opacity = 0.3 + (progress * 0.4);
+                        requestAnimationFrame(animate);
+                    } else {
+                        // Reached destination
+                        fallingDiv.style.opacity = 0;
+                    }
+                };
+                
+                requestAnimationFrame(animate);
+            }
+            
+            // Find the longest duration
+            const maxDuration = Math.max(...fallingNumbers.map(f => f.duration));
+            
+            // After all numbers have fallen, show the cells
+            setTimeout(() => {
+                // Remove falling numbers
+                fallingNumbers.forEach(f => f.element.remove());
+                
+                // Show cells with fade in
+                const cells = rowDiv.querySelectorAll('.cell');
+                cells.forEach((cell, idx) => {
+                    setTimeout(() => {
+                        cell.classList.add('visible');
+                    }, idx * 50);
+                });
+                
+                // Show target
+                const targetDiv = rowDiv.querySelector('.target-display');
+                setTimeout(() => {
+                    targetDiv.classList.add('visible');
+                }, COLS * 50);
+            }, maxDuration + 100);
+        }
+
+        function createRow(row) {
+            const grid = document.getElementById('grid');
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'game-row';
+            rowDiv.id = `row-${row}`;
+            
+            const isInputRow = Math.random() > 0.5;
+            
+            // Generate target value first
+            const target = Math.floor(Math.random() * 256);
+            
+            const rowData = {
+                cells: [],
+                target: target,
+                isInputRow: isInputRow
+            };
+            
+            // For clickable rows, generate WRONG values
+            // For input rows, generate the correct binary
+            if (!isInputRow) {
+                // Generate random binary that does NOT equal target
+                do {
+                    rowData.cells = [];
+                    for (let col = 0; col < COLS; col++) {
+                        rowData.cells.push(Math.random() > 0.5 ? 1 : 0);
+                    }
+                } while (calculateDecimal(rowData.cells) === target);
+            } else {
+                // For input rows, convert target to binary
+                let temp = target;
+                rowData.cells = [];
+                for (let i = 0; i < COLS; i++) {
+                    rowData.cells.unshift(temp % 2);
+                    temp = Math.floor(temp / 2);
+                }
+            }
+            
+            for (let col = 0; col < COLS; col++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.textContent = rowData.cells[col];
+                cell.dataset.row = row;
+                cell.dataset.col = col;
+                
+                if (!isInputRow) {
+                    cell.onclick = () => flipCell(row, col);
+                } else {
+                    cell.style.cursor = 'default';
+                }
+                
+                rowDiv.appendChild(cell);
+            }
+            
+            const targetDiv = document.createElement('div');
+            targetDiv.className = 'target-display';
+            
+            if (isInputRow) {
+                rowDiv.classList.add('input-row');
+                targetDiv.innerHTML = `
+                    = <input type="number" class="decimal-input" id="input-${row}" min="0" max="255">
+                    <button class="check-btn" onclick="checkInput(${row})">✓</button>
+                `;
+            } else {
+                targetDiv.textContent = `= ${target}`;
+            }
+            
+            rowDiv.appendChild(targetDiv);
+            grid.appendChild(rowDiv);
+            
+            if (gameState[row]) {
+                gameState[row] = rowData;
+            } else {
+                gameState.push(rowData);
+            }
+            
+            // Start the falling animation
+            animateFallingNumbers(rowDiv, rowData, row);
+        }
+
+        function flipCell(row, col) {
+            const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+            if (!cell.classList.contains('visible')) return;
+            
+            gameState[row].cells[col] = 1 - gameState[row].cells[col];
+            cell.textContent = gameState[row].cells[col];
+            cell.classList.add('correct-flash');
+            setTimeout(() => cell.classList.remove('correct-flash'), 300);
+            
+            checkRow(row);
+        }
+
+        function calculateDecimal(cells) {
+            let sum = 0;
+            for (let i = 0; i < cells.length; i++) {
+                sum += cells[i] * Math.pow(2, cells.length - 1 - i);
+            }
+            return sum;
+        }
+
+        function checkRow(row) {
+            if (gameState[row].isInputRow) return;
+            
+            const current = calculateDecimal(gameState[row].cells);
+            if (current === gameState[row].target) {
+                clearRow(row);
+            }
+        }
+
+        function checkInput(row) {
+            const input = document.getElementById(`input-${row}`);
+            const value = parseInt(input.value);
+            
+            if (value === gameState[row].target) {
+                clearRow(row);
+            }
+        }
+
+        function clearRow(row) {
+            if (!gameActive) return;
+            
+            score++;
+            document.getElementById('score-value').textContent = score;
+            
+            const rowDiv = document.getElementById(`row-${row}`);
+            
+            // Add cleared animation to all cells and target
+            rowDiv.querySelectorAll('.cell').forEach(cell => {
+                cell.classList.add('cleared');
+                cell.style.pointerEvents = 'none';
+            });
+            const targetDiv = rowDiv.querySelector('.target-display');
+            if (targetDiv) {
+                targetDiv.style.animation = 'clearRow 1s forwards';
+            }
+            
+            // Check if level is complete
+            if (score >= totalRowsForLevel) {
+                setTimeout(() => {
+                    levelComplete();
+                }, 1000);
+                return;
+            }
+            
+            setTimeout(() => {
+                rowDiv.remove();
+                gameState.splice(row, 1);
+                
+                // Update all row IDs and indices
+                const grid = document.getElementById('grid');
+                const allRows = Array.from(grid.children);
+                
+                allRows.forEach((r, idx) => {
+                    r.id = `row-${idx}`;
+                    
+                    r.querySelectorAll('.cell').forEach((cell, colIdx) => {
+                        cell.dataset.row = idx;
+                        if (!gameState[idx].isInputRow) {
+                            cell.onclick = () => flipCell(idx, colIdx);
+                        }
+                    });
+                    
+                    const input = r.querySelector('.decimal-input');
+                    if (input) {
+                        input.id = `input-${idx}`;
+                    }
+                    const btn = r.querySelector('.check-btn');
+                    if (btn) {
+                        btn.onclick = () => checkInput(idx);
+                    }
+                });
+                
+                // Always add a new row to keep 6 on screen
+                createRow(gameState.length);
+            }, 1000);
+        }
+
+        // Make functions global
+        window.checkInput = checkInput;
+        window.restartGame = restartGame;
+
+        initGame();
+    </script>
+</body>
+</html>
