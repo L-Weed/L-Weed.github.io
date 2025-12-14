@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<head>
+    <title>Tic Tac Toe</title>
+    <style type="text/css">
+        div.counter_div:hover
+        {
+            background-color:solid purple;
+            cursor:pointer;
+            font-size:100px;
+        }
+        
+        div.title_div
+        {
+            font-size:100px;
+            text-align:center;
+        }
+        
+        div.ttt_container_div
+        {
+            width:300px;
+            height:300px;
+            border:0px red;
+            margin:auto;
+            text-align:center;
+        }
+        
+        div.ttt_div
+        {
+            border:1px solid gray;
+            font-size:57px;
+            display:inline-block;
+            width:32%;
+            height:32%;
+            padding:0px;
+            margin:0px;
+            cursor:pointer;
+        }
+        div.ttt_div:hover
+        {
+            background-color:#dfdfdf;
+        }
+        
+        div.ttt_open_div
+        {
+            border:10px solid gray;
+            font-size:24px;
+            display:inline-block;
+            width:50%;
+            height:50%;
+            padding:0px;
+            margin:0px;
+            cursor:default;
+        }
+        
+        div#players {
+            position:absolute;
+            bottom:5px;
+            left:5px;
+            border:1px solid gray;
+        }
+        div#players_title {
+            font-weight: bold;
+            border:1px solid gray;
+            text-align:center;
+        }
+        div#players_list {
+            border:1px solid gray;
+        }
+        
+        .player_data {
+            text-align: center;
+        }
+        div#games {
+            position:absolute;
+            bottom:5px;
+            right:5px;
+            border:1px solid gray;
+        }
+        div.games_title {
+            text-align: left;
+            display:inline-block;
+            float:left;
+        }
+        div#games_list {
+            border:1px solid gray;
+            max-height:100px;
+            overflow-y:scroll;
+        }
+        
+        div.player_symbol {
+            text-align: right;
+            
+        }
+        div.player_title {
+            text-align: left;
+            display:inline-block;
+            float:left;
+        }
+        
+        #turn_div {
+            font-size:18px;
+            font-weight:bold;
+            text-align:center;
+        }
+        #turn_span {
+            display:inline-block;
+            border:1px solid black;
+            width:25px;
+            height:25px;
+        }
+        span
+        {
+            font-size:30px;
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        var player1 = '^_^';
+        var player2 = '~_~';
+        var player1_name = 'Player 1';
+        var player2_name = 'Player 2';
+        var turn = player1;
+        var turn_counter = 0;
+        var box_count = 9;
+        var num_games = 0;
+        var max_turns = 8;
+
+        function select_square(square_num) {
+            if (document.getElementById('winner_div').innerHTML == '') {
+                if (document.getElementById('ttt_' + square_num).innerHTML == '&nbsp;') {
+                    document.getElementById('ttt_' + square_num).innerHTML = turn;
+                    check_winner();
+                    if (turn == player1) {
+                        turn = player2;
+                    } else {
+                        turn = player1;
+                    }
+                    document.getElementById('turn_span').innerHTML = turn;
+                }
+            }
+            turn_counter++;
+        }
+        function check_winner() {
+            if ((document.getElementById('ttt_0').innerHTML != '&nbsp;' && document.getElementById('ttt_0').innerHTML == document.getElementById('ttt_1').innerHTML && document.getElementById('ttt_1').innerHTML == document.getElementById('ttt_2').innerHTML) ||
+                (document.getElementById('ttt_3').innerHTML != '&nbsp;' && document.getElementById('ttt_3').innerHTML == document.getElementById('ttt_4').innerHTML && document.getElementById('ttt_4').innerHTML == document.getElementById('ttt_5').innerHTML) ||
+                (document.getElementById('ttt_6').innerHTML != '&nbsp;' && document.getElementById('ttt_6').innerHTML == document.getElementById('ttt_7').innerHTML && document.getElementById('ttt_7').innerHTML == document.getElementById('ttt_8').innerHTML) ||
+                (document.getElementById('ttt_0').innerHTML != '&nbsp;' && document.getElementById('ttt_0').innerHTML == document.getElementById('ttt_3').innerHTML && document.getElementById('ttt_3').innerHTML == document.getElementById('ttt_6').innerHTML) ||
+                (document.getElementById('ttt_1').innerHTML != '&nbsp;' && document.getElementById('ttt_1').innerHTML == document.getElementById('ttt_4').innerHTML && document.getElementById('ttt_4').innerHTML == document.getElementById('ttt_7').innerHTML) ||
+                (document.getElementById('ttt_2').innerHTML != '&nbsp;' && document.getElementById('ttt_2').innerHTML == document.getElementById('ttt_5').innerHTML && document.getElementById('ttt_5').innerHTML == document.getElementById('ttt_8').innerHTML) ||
+                (document.getElementById('ttt_0').innerHTML != '&nbsp;' && document.getElementById('ttt_0').innerHTML == document.getElementById('ttt_4').innerHTML && document.getElementById('ttt_4').innerHTML == document.getElementById('ttt_8').innerHTML) ||
+                (document.getElementById('ttt_2').innerHTML != '&nbsp;' && document.getElementById('ttt_2').innerHTML == document.getElementById('ttt_4').innerHTML && document.getElementById('ttt_4').innerHTML == document.getElementById('ttt_6').innerHTML)) {
+                
+                document.getElementById('winner_div').innerHTML = turn + ' Wins!!! :D';
+                document.getElementById('games_list').innerHTML = 'Player' + (turn == player1 ? ' 1 Wins' : ' 2 Wins') + '<br>' + document.getElementById('games_list').innerHTML;
+                if (turn == player1) {
+                    document.getElementById('player1_wins').innerHTML++;
+					document.getElementById('player2_losses').innerHTML++;
+                } else {
+                    document.getElementById('player2_wins').innerHTML++;
+					document.getElementById('player1_losses').innerHTML++;
+                }
+                num_games++;
+            } else {
+                if (turn_counter == max_turns) {
+                    document.getElementById('winner_div').innerHTML = 'No one wins!!!';
+                    document.getElementById('games_list').innerHTML = 'DRAW<br>' + document.getElementById('games_list').innerHTML;
+                    document.getElementById('player1_draws').innerHTML++;
+                    document.getElementById('player2_draws').innerHTML++;
+                    num_games++;
+                }
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function(event) {
+            set_game();
+        });
+    </script>
+
+    <div class="title_div"><h1 id="page_title">'If You Play This Game You Are Awesome!'</h1></div>
+    <br />
+    <div class="ttt_container_div" id="ttt_container_div"></div>
+    <br />
+
+    <div id="turn_div">
+        TURN:
+    </div>
+    <br />
+
+    <div id="winner_div" class="title_div"></div>
+    <div class="title_div"><button id="new_game_button" onclick="set_game();">New Game</button></div>
+    <br />
+    
+    <div id="players">
+        <div id="players_title">&nbsp;&nbsp;&nbsp;Players&nbsp;&nbsp;&nbsp;</div>
+        <div id="players_list">
+            <table id="players_table">
+                <tr>
+                    <th>Player</th><th>Symbol</th><th>W</th><th>L</th><th>D</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="games">
+        <div id="games_title">&nbsp;&nbsp;&nbsp;Games&nbsp;&nbsp;&nbsp;</div>
+        <div id="games_list"></div>
+    </div>
+    
+    <script>
+        //Set up the turn box:
+        var existingNode = document.getElementById("turn_div");
+        var newNode = document.createElement("div");
+        newNode.setAttribute("id", "turn_span");
+        newNode.innerHTML = turn;
+        existingNode.appendChild(newNode);
+        //Set up Player 1:
+        var existingNode = document.getElementById("players_table");
+        var newNodeTR = document.createElement("tr");
+        existingNode.appendChild(newNodeTR);
+        newNodeTD = document.createElement("td");
+        newNodeTD.setAttribute("id", "player1_name");
+        newNodeTD.innerHTML = player1_name;
+        newNodeTR.appendChild(newNodeTD);
+        //Set up Player 1 Symbol:
+        newNodeTD = document.createElement("td");
+        newNodeTD.setAttribute("class", "player_data");
+        newNodeTD.innerHTML = player1;
+        newNodeTR.appendChild(newNodeTD);
+        //Set up Player 1 Wins:
+        newNodeTD = document.createElement("td");
+        newNodeTD.setAttribute("class", "player_data");
+        newNodeTD.setAttribute("id", "player1_wins");
+        newNodeTD.innerHTML = '0';
+        newNodeTR.appendChild(newNodeTD);
+        //Set up Player 1 Losses:
+        newNodeTD = document.createElement("td");
+        newNodeTD.setAttribute("class", "player_data");
+        newNodeTD.setAttribute("id", "player1_losses");
+        newNodeTD.innerHTML = '0';
+        newNodeTR.appendChild(newNodeTD);
+        //Set up Player 1 Draws:
+        newNodeTD = document.createElement("td");
+        newNodeTD.setAttribute("class", "player_data draws");
+        newNodeTD.setAttribute("id", "player1_draws");
+        newNodeTD.innerHTML = '0';
+        newNodeTR.appendChild(newNodeTD);
+        //Now player 2:
+        newNodeTR = document.createElement("tr");
+        existingNode.appendChild(newNodeTR);
+        newNodeTD = document.createElement("td");
+        newNodeTD.setAttribute("id", "player2_name");
+        newNodeTD.innerHTML = player2_name;
+        newNodeTR.appendChild(newNodeTD);
+        //Set up Player 1 Symbol:
+        newNodeTD = document.createElement("td");
+        newNodeTD.setAttribute("class", "player_data");
+        newNodeTD.innerHTML = player2;
+        newNodeTR.appendChild(newNodeTD);
+        //Set up Player 1 Wins:
+        newNodeTD = document.createElement("td");
+        newNodeTD.setAttribute("class", "player_data");
+        newNodeTD.setAttribute("id", "player2_wins");
+        newNodeTD.innerHTML = '0';
+        newNodeTR.appendChild(newNodeTD);
+        //Set up Player 1 Losses:
+        newNodeTD = document.createElement("td");
+        newNodeTD.setAttribute("class", "player_data");
+        newNodeTD.setAttribute("id", "player2_losses");
+        newNodeTD.innerHTML = '0';
+        newNodeTR.appendChild(newNodeTD);
+        //Set up Player 1 Draws:
+        newNodeTD = document.createElement("td");
+        newNodeTD.setAttribute("class", "player_data");
+        newNodeTD.setAttribute("class", "player_data draws");
+        newNodeTD.setAttribute("id", "player2_draws");
+        newNodeTD.innerHTML = '0';
+        newNodeTR.appendChild(newNodeTD);
+        
+        document.title = "Tic Tac Toe";
+        document.getElementById('page_title').innerHTML = '*_*';
+        player1_name = prompt('What is the name of Player 1?', '');
+        document.getElementById('player1_name').innerHTML = player1_name;
+        player2_name = prompt('What is the name of the Player 2?', '');
+        document.getElementById('player2_name').innerHTML = player2_name;
+        
+        function set_game() {
+            turn_counter = 0;
+            document.getElementById('winner_div').innerHTML = '';
+            var existingNode = document.getElementById("ttt_container_div");
+            existingNode.innerHTML = '';
+            var newNode = document.createElement("div");
+            for (var counter = 0; counter < box_count; counter++) {
+                newNode = document.createElement("div");
+                newNode.setAttribute("id", "ttt_" + counter);
+                newNode.setAttribute("class", "ttt_div");
+                newNode.setAttribute("data-counter", counter);
+                newNode.innerHTML = "&nbsp;";
+                newNode.addEventListener("click", function() {select_square(this.getAttribute("data-counter")); });
+                existingNode.appendChild(newNode);
+            }
+        }
+    </script>
+</body>
+</html>
