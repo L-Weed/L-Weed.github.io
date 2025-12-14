@@ -384,13 +384,15 @@ section:not(#main) {
         overflow: hidden;
         width: 100%;
     }
+    .iframe-wrapper iframe {
+        width: 100%;
+        border: none;
+        display: block; /* removes inline gaps */
+    }
     .flex .iframe-wrapper {
         margin: 1.5rem; /* spacing for large iframes */
     }
-    .iframe-wrapper iframe {
-        width: 100%;
+    .flex .iframe-wrapper iframe {
         height: 100%;
-        border: none;
-        display: block; /* removes inline gaps */
     }
 }
