@@ -379,8 +379,17 @@ section:not(#main) {
         gap: 1rem;
         margin: 1rem;
     }
-    iframe {
+    .iframe-wrapper {
+        border-radius: .25rem;
+        overflow: hidden;
+    }
+    .iframe-wrapper iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;          /* removes inline gaps */
+    }
+    .flex iframe {
         padding: 1rem;
-        border-radius: .5rem;
     }
 }
