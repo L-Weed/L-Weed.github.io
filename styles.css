@@ -360,7 +360,6 @@ section:not(#main) {
         padding-top: calc(var(--nav-height));
         display: flex;
         flex-direction: column;
-        height: 100%;
         box-sizing: border-box;
         flex-wrap: wrap;
     }
