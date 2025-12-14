@@ -383,13 +383,13 @@ section:not(#main) {
         border-radius: .25rem;
         overflow: hidden;
     }
+    .flex .iframe-wrapper {
+        margin: 1.5rem; /* spacing for large iframes */
+    }
     .iframe-wrapper iframe {
         width: 100%;
         height: 100%;
         border: none;
-        display: block;          /* removes inline gaps */
-    }
-    .flex iframe {
-        padding: 1rem;
+        display: block; /* removes inline gaps */
     }
 }
